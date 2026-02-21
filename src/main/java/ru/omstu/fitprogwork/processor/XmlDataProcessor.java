@@ -25,7 +25,6 @@ public class XmlDataProcessor implements DataProcessor {
             String path = fieldPath.startsWith("/") ? fieldPath.substring(1) : fieldPath;
             String[] parts = path.split("/");
 
-            // Начинаем с корневого элемента
             List<Element> currentElements = new ArrayList<>();
             currentElements.add(document.getDocumentElement());
 
@@ -35,7 +34,6 @@ public class XmlDataProcessor implements DataProcessor {
                 List<Element> nextElements = new ArrayList<>();
 
                 if (part.matches("\\d+")) {
-                    // Индекс - берем элемент с этим индексом из текущего списка
                     int index = Integer.parseInt(part);
                     if (index < currentElements.size()) {
                         nextElements.add(currentElements.get(index));
@@ -43,7 +41,6 @@ public class XmlDataProcessor implements DataProcessor {
                         return "Индекс " + index + " вне границ. Всего элементов: " + currentElements.size();
                     }
                 } else {
-                    // Имя тега - собираем ВСЕ дочерние элементы с этим именем
                     for (Element elem : currentElements) {
                         NodeList children = elem.getChildNodes();
                         for (int i = 0; i < children.getLength(); i++) {
@@ -62,7 +59,6 @@ public class XmlDataProcessor implements DataProcessor {
                 currentElements = nextElements;
             }
 
-            // Возвращаем текст первого найденного элемента
             return currentElements.get(0).getTextContent();
 
         } catch (Exception e) {

@@ -13,7 +13,7 @@ public class Main {
         System.out.println("Файлы должны находиться в папке resources");
         System.out.println("Примеры путей: /name, /relation/1/name, /skills/0\n");
 
-        try {  // Добавить try-finally для закрытия scanner
+        try {
             while (true) {
                 System.out.println("\nВыберите действие:");
                 System.out.println("1. Прочитать из JSON файла");
