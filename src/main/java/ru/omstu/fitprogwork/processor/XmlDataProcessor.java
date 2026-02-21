@@ -4,6 +4,8 @@ import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class XmlDataProcessor implements DataProcessor {
 
@@ -23,46 +25,45 @@ public class XmlDataProcessor implements DataProcessor {
             String path = fieldPath.startsWith("/") ? fieldPath.substring(1) : fieldPath;
             String[] parts = path.split("/");
 
-            Element currentElement = document.getDocumentElement();
+            // Начинаем с корневого элемента
+            List<Element> currentElements = new ArrayList<>();
+            currentElements.add(document.getDocumentElement());
 
             for (String part : parts) {
                 if (part.isEmpty()) continue;
 
+                List<Element> nextElements = new ArrayList<>();
+
                 if (part.matches("\\d+")) {
+                    // Индекс - берем элемент с этим индексом из текущего списка
                     int index = Integer.parseInt(part);
-                    NodeList children = currentElement.getChildNodes();
-                    int elementIndex = 0;
-                    Element foundElement = null;
-
-                    for (int i = 0; i < children.getLength(); i++) {
-                        Node child = children.item(i);
-                        if (child.getNodeType() == Node.ELEMENT_NODE) {
-                            if (elementIndex == index) {
-                                foundElement = (Element) child;
-                                break;
-                            }
-                            elementIndex++;
-                        }
-                    }
-
-                    if (foundElement != null) {
-                        currentElement = foundElement;
+                    if (index < currentElements.size()) {
+                        nextElements.add(currentElements.get(index));
                     } else {
-                        return "Элемент с индексом " + index + " не найден";
+                        return "Индекс " + index + " вне границ. Всего элементов: " + currentElements.size();
                     }
                 } else {
-                    // Ищем дочерний элемент по имени
-                    NodeList nodeList = currentElement.getElementsByTagName(part);
-                    if (nodeList.getLength() > 0) {
-                        // Берем ПЕРВЫЙ элемент с таким именем
-                        currentElement = (Element) nodeList.item(0);
-                    } else {
-                        return "Элемент не найден: " + part;
+                    // Имя тега - собираем ВСЕ дочерние элементы с этим именем
+                    for (Element elem : currentElements) {
+                        NodeList children = elem.getChildNodes();
+                        for (int i = 0; i < children.getLength(); i++) {
+                            Node child = children.item(i);
+                            if (child.getNodeType() == Node.ELEMENT_NODE &&
+                                    child.getNodeName().equals(part)) {
+                                nextElements.add((Element) child);
+                            }
+                        }
                     }
                 }
+
+                if (nextElements.isEmpty()) {
+                    return "Элемент не найден: " + part;
+                }
+                currentElements = nextElements;
             }
 
-            return currentElement.getTextContent();
+            // Возвращаем текст первого найденного элемента
+            return currentElements.get(0).getTextContent();
 
         } catch (Exception e) {
             return "Ошибка при обработке XML: " + e.getMessage();

@@ -6,21 +6,6 @@ import ru.omstu.fitprogwork.processor.XmlDataProcessor;
 
 public class DataProcessorFactory {
 
-    public enum FileType {
-        JSON, XML
-    }
-
-    public static DataProcessor getProcessor(FileType fileType) {
-        switch (fileType) {
-            case JSON:
-                return new JsonDataProcessor();
-            case XML:
-                return new XmlDataProcessor();
-            default:
-                throw new IllegalArgumentException("Неподдерживаемый тип файла: " + fileType);
-        }
-    }
-
     public static DataProcessor getProcessorByFileName(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             throw new IllegalArgumentException("Имя файла не может быть пустым");
