@@ -1,0 +1,25 @@
+[
+{
+    "type": "xml",
+    "data": "<root><name>Иван Иванов</name><relation><name>Петр</name></relation><relation><name>Анастасия</name></relation></root>",
+    "path": "/relation/1/name"
+},
+
+{
+    "type": "json",
+    "data": "{\"name\":\"Иван Иванов\",\"relation\":[{\"name\":\"Петр\"},{\"name\":\"Анастасия\"}]}",
+    "path": "/relation/1/name"
+},
+
+{
+    "type": "yaml",
+    "data": "name: Иван Иванов\nrelation:\n  - name: Петр\n  - name: Анастасия",
+    "path": "/relation/1/name"
+},
+
+{
+    "type": "json",
+    "data": "{\"name\":\"Иван\"}",
+    "path": "/age"
+}
+]
