@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 @Service
 public class CacheService {
+    
     private static final Logger log = LoggerFactory.getLogger(CacheService.class);
     private final ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
@@ -26,7 +28,7 @@ public class CacheService {
         log.info("КЕШ: сохранен ключ '{}' со значением '{}'", key, value);
     }
 
-    public String getOrCompute(String key, java.util.function.Supplier<String> computer) {
+    public String getOrCompute(String key, Supplier<String> computer) {
         String cached = get(key);
         if (cached != null) {
             return cached;
@@ -35,5 +37,14 @@ public class CacheService {
         String result = computer.get();
         put(key, result);
         return result;
+    }
+
+    public void clear() {
+        cache.clear();
+        log.info("КЕШ: очищен");
+    }
+
+    public void evictOlderThan(long milliseconds) {
+        log.info("InMemory КЕШ: evictOlderThan не поддерживается (нет временных меток)");
     }
 }
