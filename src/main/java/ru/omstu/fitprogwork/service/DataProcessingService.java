@@ -2,7 +2,7 @@ package ru.omstu.fitprogwork.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.omstu.fitprogwork.cache.CacheService;
+import ru.omstu.fitprogwork.cache.DatabaseCacheService;
 import ru.omstu.fitprogwork.dto.ExtractRequestDto;
 import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class DataProcessingService {
     private List<DataExtractorService> extractors;
 
     @Autowired
-    private CacheService cacheService;
+    private DatabaseCacheService cacheService;
 
     private Map<String, DataExtractorService> extractorMap = new HashMap<>();
 
